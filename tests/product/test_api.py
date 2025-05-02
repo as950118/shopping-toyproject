@@ -13,13 +13,11 @@ def test_list_products():
 
 
 def test_get_product_detail():
-    pass
-    # TODO 현재는 데이터 없음
-    # response = client.get("/products/1")
-    # assert response.status_code == 200
-    # data = response.json()
-    # assert data["id"] == 1
-    # assert "final_price" in data
+    response = client.get("/products/1")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == 1
+    assert "final_price" in data
 
 
 def test_get_product_detail_not_found():
