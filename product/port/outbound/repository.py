@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from product.domain.models import Product
+from product.domain.model import Product
 
 
 # 출력 포트: 상품 저장소(Repository) 인터페이스

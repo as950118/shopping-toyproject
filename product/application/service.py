@@ -1,5 +1,5 @@
 from typing import List, Optional
-from product.domain.models import Product
+from product.domain.model import Product
 from product.port.inbound.use_case import ProductUseCase
 from product.port.outbound.repository import ProductRepository
 

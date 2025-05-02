@@ -7,7 +7,7 @@ from product.application.schemas import (
     CouponSchema,
     ProductCreateSchema
 )
-from product.domain.models import Product
+from product.domain.model import Product
 from product.domain.policy import (
     RateDiscountPolicy,
     RateCouponPolicy, AmountDiscountPolicy,

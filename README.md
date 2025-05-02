@@ -52,23 +52,30 @@
 shopping-toyproject/
 ├── main.py # FastAPI 앱 실행 및 라우터 등록 
 ├── database.py # DB 연결 및 세션 관리
-│ ├── product/
-│ ├── domain/ # 도메인 엔티티, 정책(Strategy) 등
-│ │ ├── models.py
-│ │ └── policy.py
-│ ├── application/ # 서비스(유스케이스), 포트(인터페이스)
-│ │ ├── service.py
-│ │ └── port.py
-│ ├── infrastructure/ # DB 모델, 리포지토리 구현
-│ │ ├── db_models.py
-│ │ └── repository.py
-│ ├── api/ # FastAPI 라우터, Pydantic 스키마
-│ │ ├── router.py
-│ │ └── schemas.py
-│ ├── tests/ # 단위/통합 테스트
-│ │ ├── test_product_service.py
-│ │ └── schemas.py
-│ └── README.md # 프로젝트 설명 (본 파일)
+│ ├── product/ # 도메인
+│ │ ├── domain/
+│ │ │ ├── models.py
+│ │ │ └── policy.py
+│ │ ├── application/
+│ │ │ ├── service.py
+│ │ │ ├── schemas.py
+│ │ │ └── mapper.py
+│ │ ├── adapter/
+│ │ │ ├── inbound/
+│ │ │ │ └── router.py
+│ │ │ ├── outbound/
+│ │ │ │ ├── db_models.py
+│ │ │ └─└── repository.py
+│ │ ├── port/
+│ │ │ ├── inbound/
+│ │ │ │ └── router.py
+│ │ │ ├── outbound/
+│ │ │ │ ├── db_models.py
+│ │ └─└─└── repository.py
+├── tests/
+│ ├── test_product_service.py
+│ └── test_product_api.py
+└── README.md # 프로젝트 설명 (본 파일)
 ```
 
 ### 핵심 코드 설명

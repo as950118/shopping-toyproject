@@ -1,6 +1,6 @@
 from typing import List, Optional
 from abc import ABC, abstractmethod
-from product.domain.models import Product
+from product.domain.model import Product
 
 
 # 입력 포트: 상품 유스케이스 인터페이스

@@ -1,4 +1,4 @@
-from product.domain.models import Product
+from product.domain.model import Product
 from product.domain.policy import (
     RateDiscountPolicy,
     AmountDiscountPolicy,

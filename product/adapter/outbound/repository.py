@@ -8,7 +8,7 @@ from product.adapter.outbound.db_models import (
     DiscountType,
     CouponType,
 )
-from product.domain.models import Product
+from product.domain.model import Product
 from product.domain.policy import (
     DiscountPolicy,
     CouponPolicy,
