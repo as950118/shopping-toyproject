@@ -1,6 +1,8 @@
 from typing import List, Optional
 from product.domain.models import Product
-from product.application.port import ProductUseCase, ProductRepository
+from product.port.inbound.use_case import ProductUseCase
+from product.port.outbound.repository import ProductRepository
+
 
 class ProductService(ProductUseCase):
     """

@@ -3,16 +3,18 @@ from pydantic import BaseModel, Field
 
 from product.domain.models import Product, CouponPolicy
 from product.domain.policy import RateDiscountPolicy, AmountDiscountPolicy, RateCouponPolicy, AmountCouponPolicy
-from product.infrastructure.db_models import DiscountType
+from product.adapter.outbound.db_models import DiscountType
 
 
 class DiscountSchema(BaseModel):
-    type: DiscountType = Field(..., description="할인 타입: rate(정률), amount(정액)")
+    type: DiscountType = Field(..., description="할인 타입: rate(할인률), amount(정액)")
     value: float = Field(..., description="할인 값: 정률(0.0~1.0), 정액(정수)")
 
+
 class CouponSchema(BaseModel):
-    type: DiscountType = Field(..., description="쿠폰 타입: rate(정률), amount(정액)")
+    type: DiscountType = Field(..., description="쿠폰 타입: rate(할인률), amount(정액)")
     value: float = Field(..., description="쿠폰 값: 정률(0.0~1.0), 정액(정수)")
+
 
 class ProductCreateSchema(BaseModel):
     name: str = Field(..., description="상품명")
@@ -50,10 +52,9 @@ def product_create_schema_to_domain(schema: ProductCreateSchema) -> Product:
             coupon_policies.append(AmountCouponPolicy(int(coupon.value)))
     # id는 None 또는 0으로 생성(저장 시 DB에서 할당)
     return Product(
-        id=0,
+        product_id=None,
         name=schema.name,
         price=schema.price,
         discount_policy=discount_policy,
         coupon_policies=coupon_policies,
     )
-

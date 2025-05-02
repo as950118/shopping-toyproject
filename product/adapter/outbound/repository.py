@@ -1,7 +1,14 @@
 from typing import List, Optional
+
 from sqlalchemy.orm import Session
 
-from product.application.port import ProductRepository
+from product.adapter.outbound.db_models import (
+    Product as ProductORM,
+    Discount as DiscountORM,
+    Coupon as CouponORM,
+    DiscountType,
+    CouponType,
+)
 from product.domain.models import Product
 from product.domain.policy import (
     DiscountPolicy,
@@ -11,13 +18,8 @@ from product.domain.policy import (
     RateCouponPolicy,
     AmountCouponPolicy,
 )
-from product.infrastructure.db_models import (
-    Product as ProductORM,
-    Discount as DiscountORM,
-    Coupon as CouponORM,
-    DiscountType,
-    CouponType,
-)
+from product.port.outbound.repository import ProductRepository
+
 
 def to_discount_policy(discount_orm: Optional[DiscountORM]) -> Optional[DiscountPolicy]:
     if not discount_orm:
@@ -29,6 +31,7 @@ def to_discount_policy(discount_orm: Optional[DiscountORM]) -> Optional[Discount
         return AmountDiscountPolicy(int(discount_orm.value))
     return None
 
+
 def to_coupon_policy(coupon_orm: CouponORM) -> CouponPolicy:
     if coupon_orm.type == CouponType.RATE:
         return RateCouponPolicy(coupon_orm.value)
@@ -36,6 +39,7 @@ def to_coupon_policy(coupon_orm: CouponORM) -> CouponPolicy:
         # value가 float이므로 int로 변환
         return AmountCouponPolicy(int(coupon_orm.value))
     raise ValueError("Unknown coupon type")
+
 
 def to_domain(product_orm: ProductORM) -> Product:
     discount_policy = to_discount_policy(product_orm.discount)
@@ -47,6 +51,7 @@ def to_domain(product_orm: ProductORM) -> Product:
         discount_policy=discount_policy,
         coupon_policies=coupon_policies,
     )
+
 
 class SQLAlchemyProductRepository(ProductRepository):
     """
@@ -67,8 +72,7 @@ class SQLAlchemyProductRepository(ProductRepository):
             return to_domain(product)
         return None
 
-
-def save(self, product: Product) -> Product:
+    def save(self, product: Product) -> Product:
         # 단순 예시: 새 Product만 저장 (업데이트 미구현)
         product_orm = ProductORM(
             name=product.name,
