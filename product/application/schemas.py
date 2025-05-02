@@ -33,28 +33,3 @@ class ProductResponseSchema(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-def product_create_schema_to_domain(schema: ProductCreateSchema) -> Product:
-    # Discount 변환
-    discount_policy = None
-    if schema.discount:
-        if schema.discount.type == DiscountType.RATE:
-            discount_policy = RateDiscountPolicy(schema.discount.value)
-        elif schema.discount.type == DiscountType.AMOUNT:
-            discount_policy = AmountDiscountPolicy(int(schema.discount.value))
-    # Coupon 변환
-    coupon_policies: List[CouponPolicy] = []
-    for coupon in schema.coupons or []:
-        if coupon.type == DiscountType.RATE:
-            coupon_policies.append(RateCouponPolicy(coupon.value))
-        elif coupon.type == DiscountType.AMOUNT:
-            coupon_policies.append(AmountCouponPolicy(int(coupon.value)))
-    # id는 None 또는 0으로 생성(저장 시 DB에서 할당)
-    return Product(
-        product_id=None,
-        name=schema.name,
-        price=schema.price,
-        discount_policy=discount_policy,
-        coupon_policies=coupon_policies,
-    )

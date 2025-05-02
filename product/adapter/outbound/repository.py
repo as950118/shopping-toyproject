@@ -3,9 +3,8 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from product.adapter.outbound.db_models import (
-    Product as ProductORM,
-    Discount as DiscountORM,
-    Coupon as CouponORM,
+    ProductEntity,
+    CouponEntity,
     DiscountType,
     CouponType,
 )
@@ -21,7 +20,7 @@ from product.domain.policy import (
 from product.port.outbound.repository import ProductRepository
 
 
-def to_discount_policy(discount_orm: Optional[DiscountORM]) -> Optional[DiscountPolicy]:
+def to_discount_policy(discount_orm: Optional[ProductEntity]) -> Optional[DiscountPolicy]:
     if not discount_orm:
         return None
     if discount_orm.type == DiscountType.RATE:
@@ -32,7 +31,7 @@ def to_discount_policy(discount_orm: Optional[DiscountORM]) -> Optional[Discount
     return None
 
 
-def to_coupon_policy(coupon_orm: CouponORM) -> CouponPolicy:
+def to_coupon_policy(coupon_orm: CouponEntity) -> CouponPolicy:
     if coupon_orm.type == CouponType.RATE:
         return RateCouponPolicy(coupon_orm.value)
     elif coupon_orm.type == CouponType.AMOUNT:
@@ -41,11 +40,11 @@ def to_coupon_policy(coupon_orm: CouponORM) -> CouponPolicy:
     raise ValueError("Unknown coupon type")
 
 
-def to_domain(product_orm: ProductORM) -> Product:
+def to_domain(product_orm: ProductEntity) -> Product:
     discount_policy = to_discount_policy(product_orm.discount)
     coupon_policies = [to_coupon_policy(c) for c in product_orm.coupons]
     return Product(
-        id=product_orm.id,
+        product_id=product_orm.id,
         name=product_orm.name,
         price=product_orm.price,
         discount_policy=discount_policy,
@@ -62,19 +61,19 @@ class SQLAlchemyProductRepository(ProductRepository):
         self.db = db
 
     def get_all(self) -> List[Product]:
-        products = self.db.query(ProductORM).all()
+        products = self.db.query(ProductEntity).all()
         return [to_domain(p) for p in products]
 
     def get_by_id(self, product_id: int) -> Optional[Product]:
         # 경고 띄워서 타입 힌트 추가
-        product: Optional[ProductORM] = self.db.query(ProductORM).filter(ProductORM.id == product_id).first()
+        product: Optional[ProductEntity] = self.db.query(ProductEntity).filter(ProductEntity.id == product_id).first()
         if product:
             return to_domain(product)
         return None
 
     def save(self, product: Product) -> Product:
         # 단순 예시: 새 Product만 저장 (업데이트 미구현)
-        product_orm = ProductORM(
+        product_orm = ProductEntity(
             name=product.name,
             price=product.price,
         )

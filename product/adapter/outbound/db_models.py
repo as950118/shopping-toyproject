@@ -47,7 +47,7 @@ product_coupon_table = Table(
 )
 
 
-class Product(Base):
+class ProductEntity(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -56,18 +56,18 @@ class Product(Base):
 
     # N:M 관계로 변경
     discounts = relationship(
-        "Discount",
+        "DiscountEntity",
         secondary=product_discount_table,
         back_populates="products"
     )
     coupons = relationship(
-        "Coupon",
+        "CouponEntity",
         secondary=product_coupon_table,
         back_populates="products"
     )
 
 
-class Discount(Base):
+class DiscountEntity(Base):
     __tablename__ = "discounts"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -91,7 +91,7 @@ class Discount(Base):
 
     # N:M 관계
     products = relationship(
-        "Product",
+        "ProductEntity",
         secondary=product_discount_table,
         back_populates="discounts"
     )
@@ -105,10 +105,10 @@ class DiscountAttribute(Base):
     name = Column(String(50), nullable=False)  # 예: "rate", "amount", "start_date", "target_user"
     value = Column(Text, nullable=False)  # 문자열로 저장, 필요시 파싱
 
-    discount = relationship("Discount", back_populates="attributes")
+    discount = relationship("DiscountEntity", back_populates="attributes")
 
 
-class Coupon(Base):
+class CouponEntity(Base):
     __tablename__ = "coupons"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -132,7 +132,7 @@ class Coupon(Base):
 
     # N:M 관계
     products = relationship(
-        "Product",
+        "ProductEntity",
         secondary=product_coupon_table,
         back_populates="coupons"
     )
@@ -146,4 +146,4 @@ class CouponAttribute(Base):
     name = Column(String(50), nullable=False)  # 예: "rate", "amount", "start_date", "target_user"
     value = Column(Text, nullable=False)
 
-    coupon = relationship("Coupon", back_populates="attributes")
+    coupon = relationship("CouponEntity", back_populates="attributes")
