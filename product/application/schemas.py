@@ -18,7 +18,7 @@ class CouponSchema(BaseModel):
 class ProductCreateSchema(BaseModel):
     name: str = Field(..., description="상품명")
     price: int = Field(..., description="상품 가격")
-    discount: Optional[DiscountSchema] = Field(None, description="할인 정책")
+    discounts: Optional[List[DiscountSchema]] = Field(default_factory=list, description="할인 정책")
     coupons: Optional[List[CouponSchema]] = Field(default_factory=list, description="쿠폰 목록")
 
 
@@ -26,7 +26,7 @@ class ProductResponseSchema(BaseModel):
     id: int
     name: str
     price: int
-    discount: Optional[DiscountSchema] = None
+    discounts: List[DiscountSchema] = None
     coupons: List[CouponSchema] = []
     final_price: Optional[int] = Field(None, description="최종 판매가 (할인/쿠폰 적용 후)")
 

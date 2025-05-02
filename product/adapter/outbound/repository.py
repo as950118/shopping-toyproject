@@ -40,14 +40,14 @@ def to_coupon_policy(coupon_orm: CouponEntity) -> CouponPolicy:
     raise ValueError("Unknown coupon type")
 
 
-def to_domain(product_orm: ProductEntity) -> Product:
-    discount_policy = to_discount_policy(product_orm.discount)
-    coupon_policies = [to_coupon_policy(c) for c in product_orm.coupons]
+def to_domain(product_entity: ProductEntity) -> Product:
+    discount_policies = [to_discount_policy(d) for d in product_entity.discounts]
+    coupon_policies = [to_coupon_policy(c) for c in product_entity.coupons]
     return Product(
-        product_id=product_orm.id,
-        name=product_orm.name,
-        price=product_orm.price,
-        discount_policy=discount_policy,
+        product_id=product_entity.id,
+        name=product_entity.name,
+        price=product_entity.price,
+        discount_policies=discount_policies,
         coupon_policies=coupon_policies,
     )
 

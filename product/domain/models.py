@@ -15,13 +15,13 @@ class Product:
             product_id: Optional[int],
             name: str,
             price: int,
-            discount_policy: Optional[DiscountPolicy] = None,
+            discount_policies: Optional[List[DiscountPolicy]] = None,
             coupon_policies: Optional[List[CouponPolicy]] = None,
     ):
         self.product_id = product_id
         self.name = name
         self.price = price
-        self.discount_policy = discount_policy
+        self.discount_policies = discount_policies or []
         self.coupon_policies = coupon_policies or []
 
     def calculate_final_price(self) -> int:
@@ -29,8 +29,8 @@ class Product:
         할인 및 쿠폰 정책을 순차적으로 적용하여 최종 가격을 계산
         """
         price = self.price
-        if self.discount_policy:
-            price = self.discount_policy.apply(price)
+        for discount in self.discount_policies:
+            price = discount.apply(price)
         for coupon in self.coupon_policies:
             price = coupon.apply(price)
         return max(price, 0)
