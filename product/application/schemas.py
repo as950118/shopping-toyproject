@@ -1,8 +1,7 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field
 
-from product.domain.models import Product, CouponPolicy
-from product.domain.policy import RateDiscountPolicy, AmountDiscountPolicy, RateCouponPolicy, AmountCouponPolicy
+from pydantic import BaseModel, Field, ConfigDict
+
 from product.adapter.outbound.db_models import DiscountType
 
 
@@ -31,5 +30,4 @@ class ProductResponseSchema(BaseModel):
     coupons: List[CouponSchema] = []
     final_price: Optional[int] = Field(None, description="최종 판매가 (할인/쿠폰 적용 후)")
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
