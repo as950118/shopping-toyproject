@@ -1,21 +1,6 @@
 from typing import Optional, List
-from abc import ABC, abstractmethod
 
-
-class DiscountPolicy(ABC):
-    """할인 정책 인터페이스"""
-
-    @abstractmethod
-    def apply(self, price: int) -> int:
-        pass
-
-
-class CouponPolicy(ABC):
-    """쿠폰 정책 인터페이스"""
-
-    @abstractmethod
-    def apply(self, price: int) -> int:
-        pass
+from product.domain.policy import DiscountPolicy, CouponPolicy
 
 
 class Product:
